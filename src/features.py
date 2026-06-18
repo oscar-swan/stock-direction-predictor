@@ -1,3 +1,4 @@
+#ta is used to calculate RSI as it is complex manually
 import ta
 
 def engineer_features(df):
@@ -7,6 +8,7 @@ def engineer_features(df):
     df['Momentum7'] = df['Close'].diff(7)
     df['Volatility'] = df['Close'].rolling(7).std()
     df['VolumeChange'] = df['Volume'].pct_change()
+    #.squeeze turns a table with one column into a simple list. yfinance returns close feature as a table with column.
     df['RSI'] = ta.momentum.RSIIndicator(df['Close'].squeeze(), window=14).rsi()
     df['Target'] = (df['Close'].shift(-1) > df['Close']).astype(int)
 
