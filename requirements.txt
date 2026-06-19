@@ -6,3 +6,5 @@ matplotlib
 wandb
 jupyter
 ta
+xgboost
+wandb
