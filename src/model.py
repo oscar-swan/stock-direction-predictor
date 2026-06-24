@@ -2,9 +2,12 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 import wandb
+from datetime import datetime
 
 def create_model(df, model, param_grid, modelname):
-    wandb.init(project="stock-direction-predictor", name=modelname)
+    #Adds model to wandb with a timestamp for identification
+    run_name = f"{modelname}_{datetime.now().strftime('%m%d_%H%M')}"
+    wandb.init(project="stock-direction-predictor", name=run_name)
     #Creates a model
     print("Fitting model...")
     X = df.drop(columns=["Target"])
@@ -41,7 +44,7 @@ def create_model(df, model, param_grid, modelname):
 
     wandb.finish()
 
-    return grid_search
+    return grid_search, X_test, y_test
 
 
 
@@ -65,5 +68,5 @@ if __name__ == "__main__":
         "model__max_depth": [2, 3, 4, 5, 6, 7, 8]
     }
 
-    xgb_result = create_model(df, XGBClassifier(random_state=42, eval_metric="logloss"), xgb_params_long, "XGBoost")
-    rf_result = create_model(df, RandomForestClassifier(random_state=42), rf_params_long, "Random Forest")
+    xgb_result, X_test, y_test = create_model(df, XGBClassifier(random_state=42, eval_metric="logloss"), xgb_params_long, "XGBoost")
+    rf_result, X_test, y_test = create_model(df, RandomForestClassifier(random_state=42), rf_params_long, "Random Forest")

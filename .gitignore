@@ -16,3 +16,9 @@ venv/
 
 # IDE
 .idea/
+
+# Outputs
+outputs/
+
+# Weights & Biases
+wandb/
