@@ -4,9 +4,11 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import roc_auc_score
 import numpy as np
 
 def evaluate(model, X_test, y_test, modelname):
+    #Creates confusion matrix
     y_pred = model.predict(X_test)
     cm = confusion_matrix(y_test, y_pred)
     ConfusionMatrixDisplay(cm).plot()
@@ -14,11 +16,17 @@ def evaluate(model, X_test, y_test, modelname):
     plt.savefig(f"../outputs/{modelname}_confusion.png")
     plt.close()
 
+    #Prints classification report
     print(classification_report(y_test, y_pred))
 
+    #Finds and prints baseline accuracy for always predicting price rise
     baseline = [1] * len(y_test)
     baseline_accuracy = accuracy_score(y_test, baseline)
     print(f"Baseline accuracy: {baseline_accuracy}")
+
+    #Prints AUC-ROC score
+    auc = roc_auc_score(y_test, model.predict_proba(X_test)[:, 1])
+    print(f"AUC-ROC: {auc}")
 
     # Feature importance
     if hasattr(model.best_estimator_.named_steps['model'], 'feature_importances_'):
