@@ -32,8 +32,8 @@ def main():
         evaluate(xgb_result, X_test_XGB, y_test_XGB, "XGBoost")
         evaluate(rf_result, X_test_RF, y_test_RF, "Random Forest")
     if model_general_choice.upper() == "Y":
-        evaluate_generalisation(xgb_result, "XGBoost")
-        evaluate_generalisation(rf_result, "Random Forest")
+        evaluate_generalisation(xgb_result, "XGBoost", start_date, end_date)
+        evaluate_generalisation(rf_result, "Random Forest", start_date, end_date)
 
 if __name__ == "__main__":
     main()

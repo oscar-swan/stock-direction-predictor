@@ -44,10 +44,10 @@ def evaluate(model, X_test, y_test, modelname):
         plt.savefig(f"../outputs/{modelname}_feature_importance.png")
         plt.close()
 
-def evaluate_generalisation(model, modelname):
+def evaluate_generalisation(model, modelname, start_date, end_date):
     stocks = ["AMZN", "AAPL", "NVDA", "MSFT"]
     for ticker in stocks:
-        df = download_stock_data(ticker, "2015-01-01", "2024-01-01")
+        df = download_stock_data(ticker, start_date, end_date)
         df = engineer_features(df)
         X = df.drop(columns=["Target"])
         y = df["Target"]

@@ -3,6 +3,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 import wandb
 from datetime import datetime
+from sklearn.model_selection import TimeSeriesSplit
 
 def create_model(df, model, param_grid, modelname, use_wandb=True):
     #Adds model to wandb with a timestamp for identification
@@ -29,7 +30,8 @@ def create_model(df, model, param_grid, modelname, use_wandb=True):
     ])
 
     #Grid search and cv value
-    grid_search = GridSearchCV(pipeline, param_grid, cv=5, scoring="accuracy")
+    tscv = TimeSeriesSplit(n_splits=5)
+    grid_search = GridSearchCV(pipeline, param_grid, cv=tscv, scoring="accuracy")
     grid_search.fit(X_train, y_train)
 
     print(f"{modelname} model:")
