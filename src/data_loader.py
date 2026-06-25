@@ -14,5 +14,5 @@ def download_stock_data(ticker, start_date, end_date):
 
 
 if __name__ == "__main__":
-    df = download_stock_data("AAPL", "2020-01-01", "2024-01-01")
+    df = download_stock_data("AMZN", "2015-01-01", "2024-01-01")
     print(df.head())

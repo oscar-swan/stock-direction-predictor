@@ -1,6 +1,4 @@
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import GridSearchCV
 import wandb
 from datetime import datetime
 from sklearn.model_selection import TimeSeriesSplit
@@ -21,18 +19,9 @@ def create_model(df, model, param_grid, modelname, use_wandb=True):
     X_train, X_test = X.iloc[:split], X.iloc[split:]
     y_train, y_test = y.iloc[:split], y.iloc[split:]
 
-    #Preprocessor
-    preprocessor = StandardScaler()
-
-    #Pipeline
-    pipeline = Pipeline(steps=[
-        ("preprocessor", preprocessor),
-        ("model", model)
-    ])
-
     #Grid search and cv value
     tscv = TimeSeriesSplit(n_splits=5)
-    grid_search = GridSearchCV(pipeline, param_grid, cv=tscv, scoring="accuracy")
+    grid_search = GridSearchCV(model, param_grid, cv=tscv, scoring="accuracy")
     grid_search.fit(X_train, y_train)
 
     #Display best parameters and model scores
@@ -46,7 +35,7 @@ def create_model(df, model, param_grid, modelname, use_wandb=True):
         wandb.log({
             "best_score": grid_search.best_score_,
             "test_score": grid_search.score(X_test, y_test),
-            "best_params": grid_search.best_params_
+            "best_parameters": grid_search.best_params_
         })
 
         wandb.finish()

@@ -6,12 +6,14 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_auc_score
 import numpy as np
+import os
 from data_loader import download_stock_data
 from features import engineer_features
 
 def evaluate(model, X_test, y_test, modelname):
     """Evaluates model performance by confusion matrix, classification report, AUC-ROC, baseline comparison and feature importance."""
     #Creates confusion matrix
+    os.makedirs("../outputs", exist_ok=True)
     y_pred = model.predict(X_test)
     cm = confusion_matrix(y_test, y_pred)
     ConfusionMatrixDisplay(cm).plot()
@@ -32,8 +34,8 @@ def evaluate(model, X_test, y_test, modelname):
     print(f"AUC-ROC: {auc}")
 
     # Feature importance
-    if hasattr(model.best_estimator_.named_steps['model'], 'feature_importances_'):
-        importances = model.best_estimator_.named_steps['model'].feature_importances_
+    if hasattr(model.best_estimator_, 'feature_importances_'):
+        importances = model.best_estimator_.feature_importances_
         features = [col[0] if isinstance(col, tuple) else col for col in X_test.columns]
         indices = np.argsort(importances)[::-1]
 
@@ -71,9 +73,9 @@ if __name__ == "__main__":
     xgb_result, X_test, y_test = create_model(df,XGBClassifier(random_state=42, eval_metric="logloss"), XGB_PARAMS_AMZN, "XGBoost", use_wandb=False)
     evaluate(xgb_result, X_test, y_test, "XGBoost")
 
-    evaluate_generalisation(xgb_result, "XGBoost")
+    evaluate_generalisation(xgb_result, "XGBoost", "2015-01-01", "2024-01-01" )
 
     rf_result, X_test, y_test = create_model(df, RandomForestClassifier(random_state=42), RF_PARAMS_AMZN,"Random Forest", use_wandb=False)
     evaluate(rf_result, X_test, y_test, "Random Forest")
 
-    evaluate_generalisation(rf_result, "Random Forest")
+    evaluate_generalisation(rf_result, "Random Forest", "2015-01-01", "2024-01-01")

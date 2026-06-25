@@ -7,4 +7,3 @@ wandb
 jupyter
 ta
 xgboost
-wandb
