@@ -37,7 +37,7 @@ python main.py
 
 
 
-You will be prompted to enter a stock ticker (e.g. AMZN), choose a date range, and select whether to track results with Weights & Biases. Data is downloaded automatically from Yahoo Finance.
+You will be prompted to enter a stock ticker (e.g. AMZN), choose a date range (type n to use the default 2015–2024 range) and select whether to track results with Weights & Biases. Data is downloaded automatically from Yahoo Finance.
 
 
 ## Design decisions
