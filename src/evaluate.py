@@ -42,6 +42,17 @@ def evaluate(model, X_test, y_test, modelname):
         plt.savefig(f"../outputs/{modelname}_feature_importance.png")
         plt.close()
 
+def evaluate_generalisation(model, modelname):
+    stocks = ["AMZN", "AAPL", "NVDA", "MSFT"]
+    for ticker in stocks:
+        df = download_stock_data(ticker, "2015-01-01", "2024-01-01")
+        df = engineer_features(df)
+        X = df.drop(columns=["Target"])
+        y = df["Target"]
+        y_pred = model.predict(X)
+        score = accuracy_score(y, y_pred)
+        print(f"{modelname} achieved {round(score * 100, 2)}% accuracy on {ticker} stock")
+
 if __name__ == "__main__":
     from data_loader import download_stock_data
     from features import engineer_features
@@ -53,8 +64,12 @@ if __name__ == "__main__":
     df = download_stock_data("AMZN", "2015-01-01", "2024-01-01")
     df = engineer_features(df)
 
-    model, X_test, y_test = create_model(df,XGBClassifier(random_state=42, eval_metric="logloss"), XGB_PARAMS_AMZN, "XGBoost", use_wandb=False)
-    evaluate(model, X_test, y_test, "XGBoost")
+    xgb_result, X_test, y_test = create_model(df,XGBClassifier(random_state=42, eval_metric="logloss"), XGB_PARAMS_AMZN, "XGBoost", use_wandb=False)
+    evaluate(xgb_result, X_test, y_test, "XGBoost")
+
+    evaluate_generalisation(xgb_result, "XGBoost")
 
     rf_result, X_test, y_test = create_model(df, RandomForestClassifier(random_state=42), RF_PARAMS_AMZN,"Random Forest", use_wandb=False)
     evaluate(rf_result, X_test, y_test, "Random Forest")
+
+    evaluate_generalisation(rf_result, "Random Forest")
