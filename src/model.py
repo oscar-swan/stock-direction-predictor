@@ -4,10 +4,11 @@ from sklearn.preprocessing import StandardScaler
 import wandb
 from datetime import datetime
 
-def create_model(df, model, param_grid, modelname):
+def create_model(df, model, param_grid, modelname, use_wandb=True):
     #Adds model to wandb with a timestamp for identification
-    run_name = f"{modelname}_{datetime.now().strftime('%m%d_%H%M')}"
-    wandb.init(project="stock-direction-predictor", name=run_name)
+    if use_wandb:
+        run_name = f"{modelname}_{datetime.now().strftime('%m%d_%H%M')}"
+        wandb.init(project="stock-direction-predictor", name=run_name)
     #Creates a model
     print("Fitting model...")
     X = df.drop(columns=["Target"])
@@ -36,13 +37,14 @@ def create_model(df, model, param_grid, modelname):
     print("Best score:", grid_search.best_score_)
     print("CV score:", grid_search.score(X_test, y_test))
 
-    wandb.log({
-        "best_score": grid_search.best_score_,
-        "test_score": grid_search.score(X_test, y_test),
-        "best_params": grid_search.best_params_
-    })
+    if use_wandb:
+        wandb.log({
+            "best_score": grid_search.best_score_,
+            "test_score": grid_search.score(X_test, y_test),
+            "best_params": grid_search.best_params_
+        })
 
-    wandb.finish()
+        wandb.finish()
 
     return grid_search, X_test, y_test
 
@@ -68,5 +70,5 @@ if __name__ == "__main__":
         "model__max_depth": [2, 3, 4, 5, 6, 7, 8]
     }
 
-    xgb_result, X_test, y_test = create_model(df, XGBClassifier(random_state=42, eval_metric="logloss"), xgb_params_long, "XGBoost")
-    rf_result, X_test, y_test = create_model(df, RandomForestClassifier(random_state=42), rf_params_long, "Random Forest")
+    xgb_result, X_test, y_test = create_model(df, XGBClassifier(random_state=42, eval_metric="logloss"), xgb_params_long, "XGBoost", use_wandb=False)
+    rf_result, X_test, y_test = create_model(df, RandomForestClassifier(random_state=42), rf_params_long, "Random Forest", use_wandb=False)

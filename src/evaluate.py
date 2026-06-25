@@ -48,20 +48,13 @@ if __name__ == "__main__":
     from model import create_model
     from xgboost import XGBClassifier
     from sklearn.ensemble import RandomForestClassifier
+    from config import XGB_PARAMS_AMZN, RF_PARAMS_AMZN
 
     df = download_stock_data("AMZN", "2015-01-01", "2024-01-01")
     df = engineer_features(df)
-    xgb_params_long = {
-        "model__n_estimators": [125],
-        "model__max_depth": [2],
-        "model__learning_rate": [0.01]
-    }
-    model, X_test, y_test = create_model(df,XGBClassifier(random_state=42, eval_metric="logloss"), xgb_params_long, "XGBoost")
+
+    model, X_test, y_test = create_model(df,XGBClassifier(random_state=42, eval_metric="logloss"), XGB_PARAMS_AMZN, "XGBoost", use_wandb=False)
     evaluate(model, X_test, y_test, "XGBoost")
 
-    rf_params_long = {
-        "model__n_estimators": [125],
-        "model__max_depth": [2]
-    }
-    rf_result, X_test, y_test = create_model(df, RandomForestClassifier(random_state=42), rf_params_long,"Random Forest")
+    rf_result, X_test, y_test = create_model(df, RandomForestClassifier(random_state=42), RF_PARAMS_AMZN,"Random Forest", use_wandb=False)
     evaluate(rf_result, X_test, y_test, "Random Forest")
