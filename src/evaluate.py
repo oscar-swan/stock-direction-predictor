@@ -49,7 +49,7 @@ def evaluate(model, X_test, y_test, modelname):
 
 def evaluate_generalisation(model, modelname, start_date, end_date):
     """Tests model accuracy across a few large companies to assess generalisation beyond the training ticker."""
-    stocks = ["AMZN", "AAPL", "NVDA", "MSFT"]
+    stocks = ["META", "AAPL", "NVDA", "MSFT"]
     for ticker in stocks:
         df = download_stock_data(ticker, start_date, end_date)
         df = engineer_features(df)

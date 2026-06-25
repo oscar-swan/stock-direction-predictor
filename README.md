@@ -14,6 +14,32 @@ Model accuracy, precision and recall, AUC-ROC. Model will be compared against a 
 Yahoo Finance historical price data sourced via the yfinance Python library.
 Amazon (AMZN) historical price data from 2015 to present.
 
+## How to Run
+
+**Requirements:** Python 3.10+
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/oscar-swan/stock-direction-predictor.git
+cd stock-direction-predictor
+```
+
+**2. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**3. Run the predictor**
+```bash
+cd src
+python main.py
+```
+
+
+
+You will be prompted to enter a stock ticker (e.g. AMZN), choose a date range, and select whether to track results with Weights & Biases. Data is downloaded automatically from Yahoo Finance.
+
+
 ## Design decisions
 I am going to begin by building a model based around the prediction of amazon's stock price, my reasoning is that since it is a large diverse company that has been Mag 7 for a long time, it should have a more stable and more predictable stock price compared to a company like Nvidia which may be unstable and influenced a lot by real world trends.
 I will use stock price data from 2015 to now, capturing the last 10 years as it includes a variety of market conditions such as a normal market, COVID crash and recovery, AI boom and crashes due to tariff announcements and trade tensions.
