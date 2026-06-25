@@ -6,6 +6,8 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_auc_score
 import numpy as np
+from data_loader import download_stock_data
+from features import engineer_features
 
 def evaluate(model, X_test, y_test, modelname):
     #Creates confusion matrix
