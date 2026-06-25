@@ -21,13 +21,14 @@ I am going to create moving averages of stock prices to filter out the noise and
 Finally, a boolean target variable will be 0 or 1 if the next day's price is higher or not.
 
 ## Methodology 
-When data is being prepared during modelling, train and test data cannot be split 80/20 randomly, it must instead be split with training data containing 80% of the oldest data and test data being the newest 20%.
+When data is being prepared during modelling, train and test data cannot be split 80/20 randomly, it must instead be split with training data containing 80% of the oldest data and test data being the newest 20%. GridSearchCV also uses TimeSeriesSplit instead of a standard CV value to further prevent random splitting and ensure CV folds respect chronological order.
 This is to prevent the models being trained on future data and tested on past data as this would never happen in reality as you'd never have future data available when predicting and can result in the model appearing better than it really is.
 The results I achieved between the two models were very similar, with both XGBoost and RandomForest achieving 51% accuracy. Due to the results being close to random it would suggest that historical data has little impact on stock price change and the models could not make accurate predictions.
 After adding a lengthened list of parameter options for both models, XGBoost preferred a max depth of 4 and RandomForest a depth of 3. These shallow trees generalise better which indicates that the signals in the data are weak for predicting price change.
+While XGBoost typically outperforms RandomForest, both models achieved the same score further suggesting there are no meaningful signals to exploit in the data.
 
 ## Evaluation
-The confusion matrices produced by both the XGBoost and RandomForest models had a similar outcome. Both clearly showed that the model generally predicted a stock price rise almost every single time. XGBoost only correctly predicted 2 down days and RandomForest slightly more at 4 correct down days with both showing roughly 50/50 odds again when predicting down days too.
+The confusion matrices produced by both the XGBoost and RandomForest models had a similar outcome. Both clearly showed that the model generally predicted a stock price rise almost every single time. XGBoost only correctly predicted 2 down days and RandomForest slightly more at 4 correct down days.
 
 ![XGBoost Confusion Matrix](images/xgbc_new.png) ![Random Forest Confusion Matrix](images/rfc_new.png) 
 
@@ -40,5 +41,11 @@ Another feature change I would make would be to change the moving average values
 The Efficient Market Hypothesis may be to blame for the weak performance of the models as it states that stock prices already reflect all publicly available information. This means that any exploitable indicator, if it were to exist, would have already been taken advantage of by several traders effectively eliminating the signal entirely. The results I have found here support this hypothesis directly. Any attempt for ML to beat the market would likely require non public information, more sophisticated features or access to news and information about global events in real time.
 
 ## Potential Improvements
+* Replace MA7 and MA14 values with a single MA7/MA14 ratio and replace the dollar based momentum value with a percentage change value instead as mentioned in the evaluation.
+* Checks if stock data within specified time period has already been downloaded before downloading again.
+* If the best parameters have already been found for a stock over the specified time period, they can be saved and recalled reducing processing time.
+* Can select any stock to cross test your model on by entering ticker.
+* If cross testing on the same stock the model was trained on, exclude the training data period to ensure only unseen data is used for testing.
 
 ## Conclusion
+Tree based models such as XGBoost and RandomForest cannot accurately predict stock price based on historical data alone. This outcome is consistent with the Efficient Market Hypothesis, suggesting that any exploitable pattern in public price data is rapidly eliminated by the market itself.
