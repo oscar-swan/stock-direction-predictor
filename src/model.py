@@ -6,6 +6,7 @@ from datetime import datetime
 from sklearn.model_selection import TimeSeriesSplit
 
 def create_model(df, model, param_grid, modelname, use_wandb=True):
+    """Creates a model using a date ordered train and test split and GridSearchCV with TimeSeriesSplit, logs results to W&B if enabled."""
     #Adds model to wandb with a timestamp for identification
     if use_wandb:
         run_name = f"{modelname}_{datetime.now().strftime('%m%d_%H%M')}"
@@ -34,11 +35,13 @@ def create_model(df, model, param_grid, modelname, use_wandb=True):
     grid_search = GridSearchCV(pipeline, param_grid, cv=tscv, scoring="accuracy")
     grid_search.fit(X_train, y_train)
 
+    #Display best parameters and model scores
     print(f"{modelname} model:")
     print("Best params:", grid_search.best_params_)
     print("Best score:", grid_search.best_score_)
     print("CV score:", grid_search.score(X_test, y_test))
 
+    #Adds to wandb log if enabled and closes the run.
     if use_wandb:
         wandb.log({
             "best_score": grid_search.best_score_,

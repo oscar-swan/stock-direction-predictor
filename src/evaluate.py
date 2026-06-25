@@ -10,6 +10,7 @@ from data_loader import download_stock_data
 from features import engineer_features
 
 def evaluate(model, X_test, y_test, modelname):
+    """Evaluates model performance by confusion matrix, classification report, AUC-ROC, baseline comparison and feature importance."""
     #Creates confusion matrix
     y_pred = model.predict(X_test)
     cm = confusion_matrix(y_test, y_pred)
@@ -45,6 +46,7 @@ def evaluate(model, X_test, y_test, modelname):
         plt.close()
 
 def evaluate_generalisation(model, modelname, start_date, end_date):
+    """Tests model accuracy across a few large companies to assess generalisation beyond the training ticker."""
     stocks = ["AMZN", "AAPL", "NVDA", "MSFT"]
     for ticker in stocks:
         df = download_stock_data(ticker, start_date, end_date)

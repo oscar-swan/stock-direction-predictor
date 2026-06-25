@@ -2,7 +2,7 @@
 import ta
 
 def engineer_features(df):
-    #Add new features
+    """Adds technical indicators as features and a binary target variable indicating next day price direction."""
     df['MA7'] = df['Close'].rolling(7).mean()
     df['MA14'] = df['Close'].rolling(14).mean()
     df['Momentum7'] = df['Close'].diff(7)

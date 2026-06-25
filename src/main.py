@@ -7,6 +7,8 @@ from xgboost import XGBClassifier
 from sklearn.ensemble import RandomForestClassifier
 
 def main():
+    """Main function. Handles all user input and orchestrates the execution."""
+    #Gather user input
     ticker = input("Enter ticker of stock you want to train model on: ")
     default_dates = input("Do you want to select a specific date range for the dataset? (y/n) ")
     if default_dates.upper() == "Y":
@@ -23,7 +25,7 @@ def main():
     model_eval_choice = input("Evaluate model performance? (y/n) ")
     model_general_choice = input("Test generalisation across other stocks? (y/n) ")
 
-
+    #Process user input
     df = download_stock_data(ticker.upper(), start_date, end_date)
     df = engineer_features(df)
     xgb_result, X_test_XGB, y_test_XGB = create_model(df, XGBClassifier(random_state=42, eval_metric="logloss"),XGB_PARAMS_SEARCH, "XGBoost", use_wandb=wandb_choice)
